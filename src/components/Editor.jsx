@@ -144,8 +144,7 @@ export default function Editor() {
       setIsGenerating(false);
     }
   };
-
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!code.trim()) {
       toast.error('No code to save');
       return;
@@ -167,6 +166,7 @@ export default function Editor() {
       createdAt: activeSnippet ? activeSnippet.createdAt : new Date(),
     };
 
+    // Update local state
     if (activeSnippet) {
       useSnippetStore.setState((state) => ({
         snippets: state.snippets.map((snippet) =>
@@ -181,8 +181,38 @@ export default function Editor() {
       toast.success('Snippet saved successfully!');
     }
 
+    // Fetch updated snippets after state update
+    const currentSnippets = useSnippetStore.getState().snippets;
+
+    // Prepare to send snippets, ensuring it is a JSON list
+    const payload = JSON.stringify(currentSnippets);
+
+    try {
+      const response = await fetch('https://km889i5fb4.execute-api.us-east-1.amazonaws.com/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save snippets to server');
+      }
+
+      // Optionally handle server response
+      const result = await response.json();
+      console.log('Server Response:', result);
+
+      toast.success('Snippets saved to server successfully!');
+    } catch (error) {
+      console.error('Error saving to server:', error);
+      toast.error('Failed to save snippets to server');
+    }
+
     setActiveSnippet(newSnippet);
   };
+
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);

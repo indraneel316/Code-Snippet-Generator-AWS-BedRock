@@ -4,7 +4,7 @@ import SearchBar from '../components/Sidebar/SearchBar.jsx';
 import { Code, Plus } from 'lucide-react'; // Lucide icons
 
 export default function Sidebar() {
-    const { filteredSnippets, setActiveSnippet, addSnippet } = useSnippetStore((state) => ({
+    const { filteredSnippets, setActiveSnippet, addSnippet, snippets } = useSnippetStore((state) => ({
         filteredSnippets: state.filteredSnippets(), // Access filtered snippets dynamically
         setActiveSnippet: state.setActiveSnippet, // Function to set the active snippet
         addSnippet: state.addSnippet, // Function to add a new snippet to the store
@@ -41,7 +41,7 @@ export default function Sidebar() {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                     <Code className="text-indigo-500" />
-                    <h1 className="text-xl font-bold text-white">Snippet Gen</h1>
+                    <h1 className="text-xl font-bold text-white">Code Generator</h1>
                 </div>
 
                 {/* "+" Icon to add a new snippet */}
